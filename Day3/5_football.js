@@ -1,6 +1,51 @@
+class Player{
+  constructor(){
+    this.status = "active";
+    this.score = 2;
+  }
+
+  receiveCard(color){
+    if (this.status === "deleted") {
+      return;
+    }
+    this.score = color === 'Y' ? this.score - 1 : this.score - 2;
+    this.checkStatus();
+  }
+
+  checkStatus(){
+    this.status = this.score <= 0 ? "deleted" : "active";
+  }
+}
+
+class FootballTeam{
+  constructor(){
+    this.team = this.getTeamMembers();
+    this.activePlayers = 11;
+    
+  }
+
+  getTeamMembers(){
+    const teamMembers = [];
+    for (let i = 0; i < 11; i++) {
+      teamMembers.push(new Player());
+    }
+
+    return teamMembers;
+  }
+
+  giveCardToPlayer(color, playerNumber) {
+    this.team[playerNumber].receiveCard(color);
+  }
+
+  getAmountOfActivePlayers() {
+    this.activePlayers = this.team.filter(player => player.status === "active").length;
+    return this.activePlayers
+  }
+}
+
 function menStillStanding(arr) {
-  const teamA = new Array(11).fill(0);
-  const teamB = new Array(11).fill(0);
+  const teamA = new FootballTeam();
+  const teamB = new FootballTeam();
 
   if ( arr.length === 0 ) {
     return [11,11];
@@ -8,8 +53,8 @@ function menStillStanding(arr) {
 
   for (let i = 0; i < arr.length; i++) {
     // check if game is over
-    const aTeamActivePlayers = teamA.filter(el => el !== 'deleted').length;
-    const bTeamActivePlayers = teamB.filter(el => el !== 'deleted').length;
+    const aTeamActivePlayers = teamA.getAmountOfActivePlayers();
+    const bTeamActivePlayers = teamB.getAmountOfActivePlayers();
     if (aTeamActivePlayers < 7 || bTeamActivePlayers < 7) {
       return [aTeamActivePlayers, bTeamActivePlayers];
     }
@@ -18,38 +63,13 @@ function menStillStanding(arr) {
     const playerIndex = num - 1;
 
     if (team === 'A') {
-      // Ignore repeated card
-      if ( teamA[playerIndex] === 'deleted' ) {
-        break;
-      }
-
-      // give a point
-      teamA[playerIndex] = color === 'Y' ? teamA[playerIndex] + 1 : teamA[playerIndex] + 2;
-
-      // check if deleted
-      if (teamA[playerIndex] >= 2) {
-        teamA[playerIndex] = 'deleted';
-      }
-
+      teamA.giveCardToPlayer(color, playerIndex);
     } else {
-      // Ignore repeated card
-      if ( teamB[playerIndex] === 'deleted' ) {
-        break;
-      }
-
-      // give a point
-      teamB[playerIndex] = color === 'Y' ? teamB[playerIndex] + 1 : teamB[playerIndex] + 2;
-
-      // check if deleted
-      if (teamB[playerIndex] >= 2) {
-        teamB[playerIndex] = 'deleted';
-      }
+      teamB.giveCardToPlayer(color, playerIndex);
     }
   }
 
-  const aTeamActivePlayers = teamA.filter(el => el !== 'deleted').length;
-  const bTeamActivePlayers = teamB.filter(el => el !== 'deleted').length;
-  return [aTeamActivePlayers, bTeamActivePlayers];
+  return [teamA.getAmountOfActivePlayers(), teamB.getAmountOfActivePlayers()];
 }
 console.log(menStillStanding([])); // [11,11]
 console.log(menStillStanding(['A4Y', 'A4Y'])); // [10,11]
