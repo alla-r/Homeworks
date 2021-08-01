@@ -4,16 +4,18 @@ class Worker {
     this.fullName = fullName;
     this.dayRate = dayRate;
     this.workingDays = workingDays;
+    this.salaryWithExp = this.dayRate * this.workingDays * this.#experience;
+    this.salary = this.dayRate * this.workingDays;
   }
 
   showSalary() {
-    const salary = this.dayRate * this.workingDays;
-    console.log(`${this.fullName} salary: ${salary}`);
+    this.salary = this.dayRate * this.workingDays;
+    console.log(`${this.fullName} salary: ${this.salary}`);
   }
 
   showSalaryWithExperience() {
-    const salary = this.dayRate * this.workingDays * this.#experience;
-    console.log(`${this.fullName} salary: ${salary}`);
+    this.salaryWithExp = this.dayRate * this.workingDays * this.#experience;
+    console.log(`${this.fullName} salary: ${this.salaryWithExp}`);
   }
 
   get showExp() {
@@ -25,6 +27,14 @@ class Worker {
       throw new Error("The rate couldn't be negative number");
     }
     this.#experience = newExperience;
+    this.salaryWithExp = this.dayRate * this.workingDays * this.#experience;
+  }
+
+  showSortedSalary(...workers){
+    workers.push(this);
+    const sortedSlaryList = workers.sort((firstWorker, secondWorker) => firstWorker.salaryWithExp - secondWorker.salaryWithExp);
+    console.log("Sorted salary: \n");
+    sortedSlaryList.forEach(worker => console.log(`${worker.fullName}: ${worker.salaryWithExp}\n`))
   }
 }
 
@@ -46,7 +56,9 @@ let worker3 = new Worker("Andy Ander", 29, 23);
 worker3.setExp = 1.5;
 worker3.showSalaryWithExperience(); // Andy Ander salary: 1000.5
 
+worker3.showSortedSalary(worker1, worker2);
 // Sorted salary:
 // John Johnson: 690
 // Andy Ander: 1000.5
 // Tom Tomson: 1584
+
