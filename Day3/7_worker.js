@@ -30,12 +30,12 @@ class Worker {
     this.salaryWithExp = this.dayRate * this.workingDays * this.#experience;
   }
 
-  showSortedSalary(...workers){
-    workers.push(this);
-    const sortedSlaryList = workers.sort((firstWorker, secondWorker) => firstWorker.salaryWithExp - secondWorker.salaryWithExp);
-    console.log("Sorted salary: \n");
-    sortedSlaryList.forEach(worker => console.log(`${worker.fullName}: ${worker.salaryWithExp}\n`))
-  }
+  // showSortedSalary(...workers){
+  //   workers.push(this);
+  //   const sortedSlaryList = workers.sort((firstWorker, secondWorker) => firstWorker.salaryWithExp - secondWorker.salaryWithExp);
+  //   console.log("Sorted salary: \n");
+  //   sortedSlaryList.forEach(worker => console.log(`${worker.fullName}: ${worker.salaryWithExp}\n`))
+  // }
 }
 
 let worker1 = new Worker("John Johnson", 20, 23);
@@ -56,9 +56,16 @@ let worker3 = new Worker("Andy Ander", 29, 23);
 worker3.setExp = 1.5;
 worker3.showSalaryWithExperience(); // Andy Ander salary: 1000.5
 
-worker3.showSortedSalary(worker1, worker2);
+// worker3.showSortedSalary(worker1, worker2);
+
+compareSalary(worker1, worker2, worker3);
+
+function compareSalary(...workers) {
+  const sortedSlaryList = workers.sort((firstWorker, secondWorker) => firstWorker.salaryWithExp - secondWorker.salaryWithExp);
+  console.log("Sorted salary: \n");
+  sortedSlaryList.forEach(worker => console.log(`${worker.fullName}: ${worker.salaryWithExp}\n`))
+}
 // Sorted salary:
 // John Johnson: 690
 // Andy Ander: 1000.5
 // Tom Tomson: 1584
-
