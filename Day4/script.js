@@ -9,15 +9,11 @@ function sendRequest(method, url, body = null) {
 
 function getPokemonsFromServer(numberOfPokemons = 10){
   return sendRequest("GET", `${requestURL}/?limit=${numberOfPokemons}`)
-    .then(data => data.results)
+    .then(data => console.log(data.results))
     .catch(err => console.log(err))
 }
+getPokemonsFromServer();
 
-const tenPokemons = getPokemonsFromServer();
-const printPokemons = () => {
-  tenPokemons.then(arrOfPokemons => console.log(arrOfPokemons))
-}
-printPokemons();
 
 function getPokemonDetails(numberOfPokemons = 10){
   const arrOfPromises = [];
@@ -25,27 +21,36 @@ function getPokemonDetails(numberOfPokemons = 10){
     arrOfPromises.push(sendRequest("GET", `${requestURL}/${i}/`))
   }
 
-  return Promise.all(arrOfPromises).then(pokemons => {
-    localStorage.setItem("pokemons", JSON.stringify(pokemons.map(pokemon => ({
-      name: pokemon.name,
-      weight: pokemon.weight,
-      height: pokemon.height,
-      id: pokemon.id
-    }))))
-  })
+  return Promise.all(arrOfPromises)
+    .then(pokemons => {
+      localStorage.setItem("pokemons", JSON.stringify(pokemons.map(pokemon => ({
+        name: pokemon.name,
+        weight: pokemon.weight,
+        height: pokemon.height,
+        id: pokemon.id
+      }))))
+    })
+    .then(() => sortByHeight())
+    .then(() => sortByWeight())
 }
-
 getPokemonDetails();
-function sortByHeight() {
 
+function sortByHeight() {
+  const pokemons = JSON.parse(localStorage.getItem("pokemons"));
+  if (pokemons) {
+    pokemons.sort((pokemon1, pokemon2) => pokemon1.height - pokemon2.height);
+    console.log('pokemons sorted by height:');
+    console.log(pokemons)
+    sessionStorage.setItem("pokemonsSortedByHeight", JSON.stringify(pokemons));
+  }
 }
 
 function sortByWeight() {
-  
+  const pokemons = JSON.parse(localStorage.getItem("pokemons"));
+  if (pokemons) {
+    pokemons.sort((pokemon1, pokemon2) => pokemon1.weight - pokemon2.weight);
+    console.log('pokemons sorted by weight:');
+    console.log(pokemons)
+    sessionStorage.setItem("pokemonsSortedByWeight", JSON.stringify(pokemons));
+  }
 }
-
-/*
-({
-        
-      })
-      */
