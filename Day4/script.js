@@ -1,6 +1,6 @@
 const requestURL = "https://pokeapi.co/api/v2/pokemon";
 
-function sendRequest(method, url, body = null) {
+function loadJson(method, url, body = null) {
   return fetch(url, {
     method: method,
     body: body
@@ -8,7 +8,7 @@ function sendRequest(method, url, body = null) {
 }
 
 function getPokemonsFromServer(numberOfPokemons = 10){
-  return sendRequest("GET", `${requestURL}/?limit=${numberOfPokemons}`)
+  return loadJson("GET", `${requestURL}/?limit=${numberOfPokemons}`)
     .then(data => console.log(data.results))
     .catch(err => console.log(err))
 }
@@ -18,7 +18,7 @@ getPokemonsFromServer();
 function getPokemonDetails(numberOfPokemons = 10){
   const arrOfPromises = [];
   for (let i = 1; i <= numberOfPokemons; i++) {
-    arrOfPromises.push(sendRequest("GET", `${requestURL}/${i}/`))
+    arrOfPromises.push(loadJson("GET", `${requestURL}/${i}/`))
   }
 
   return Promise.all(arrOfPromises)
