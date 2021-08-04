@@ -1,7 +1,7 @@
 const requestURL = "https://pokeapi.co/api/v2/pokemon";
 
 async function loadJson(method, url, body = null) {
-  let response = await fetch(url, {
+  const response = await fetch(url, {
     method: method,
     body: body
   })
@@ -14,9 +14,13 @@ async function loadJson(method, url, body = null) {
 }
 
 async function getPokemonsFromServer(numberOfPokemons = 10){
-  await loadJson("GET", `${requestURL}/?limit=${numberOfPokemons}`)
-    .then(data => console.log(data.results))
-    .catch(err => console.log(err))
+  try {
+    const pokemonsJson = await loadJson("GET", `${requestURL}/?limit=${numberOfPokemons}`);
+    const pokemons = pokemonsJson.results;
+    console.log(pokemons);
+  } catch(err) {
+    console.error(err);
+  }
 }
 getPokemonsFromServer();
 
@@ -27,32 +31,28 @@ async function getPokemonDetails(numberOfPokemons = 10){
     arrOfPromises.push(loadJson("GET", `${requestURL}/${i}/`))
   }
 
-  const pokemonDetails = await Promise.all(arrOfPromises)
-    .then(pokemons => {
-      localStorage.setItem("pokemons", JSON.stringify(pokemons.map(pokemon => ({
-        name: pokemon.name,
-        weight: pokemon.weight,
-        height: pokemon.height,
-        id: pokemon.id
-      }))));
+  try {
+    const pokemonDetails = await Promise.all(arrOfPromises);
+    const pokemonDetailsFormatted = pokemonDetails.map(pokemon => ({
+      name: pokemon.name,
+      weight: pokemon.weight,
+      height: pokemon.height,
+      id: pokemon.id
+    }));
 
-      return pokemons.map(pokemon => ({
-        name: pokemon.name,
-        weight: pokemon.weight,
-        height: pokemon.height,
-        id: pokemon.id
-      }));
-    })
-
-  
-  return pokemonDetails;
+    localStorage.setItem("pokemons", JSON.stringify(pokemonDetailsFormatted));
+    sortByHeight(pokemonDetailsFormatted);
+    sortByWeight(pokemonDetailsFormatted);
+    
+    return pokemonDetailsFormatted;
+  } catch(err) {
+    console.error(err);
+  }
 }
+getPokemonDetails();
 
-// const pokemonsDetails = getPokemonDetails();
-// pokemonsDetails.then(details => sortByHeight(details))
-// pokemonsDetails.then(details => sortByWeight(details))
-sortByHeight();
-sortByWeight();
+// sortByHeight();
+// sortByWeight();
 
 async function sortByHeight(details = null) {
   const pokemons = details ? details : await getPokemonDetails();
