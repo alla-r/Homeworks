@@ -1,103 +1,42 @@
-const form = document.getElementById('form');
-const searchBtn = document.getElementById('search-btn');
-const searchInput = document.getElementById('search-input');
+import Pokeapi from './components/ApiService.js';
+import UI from './components/UI.js';
+import Pokemon from './components/Pokemon.js';
+import Validator from './components/Validator.js';
 
-const requestURL = "https://pokeapi.co/api/v2/pokemon";
-
-form.addEventListener("submit", e => {
+const loadData = async (e) => {
   e.preventDefault();
   // add validateInput();
+  const searchInput = document.getElementById('search-input');
+  if (Validator.validateInput(searchInput.value)) {
+    const [fromId, toId] = searchInput.value.split("-");
 
-  const [fromId, toId] = searchInput.value.split("-");
-  console.log(fromId);
-  console.log(toId);
+    try {
+      const pokemons = await Pokeapi.getPokemons(toId);
+      const pokemonsFormatted = pokemons.slice(fromId - 1, toId + 1);
+      UI.renderAllPokemons(pokemonsFormatted);
+      document.querySelectorAll('.name-link').forEach(card => card.addEventListener("click", loadPokemonDetails));
+    } catch (err) {
+      console.error(err);
+    }
+  }
+}
 
-  console.log('search');
-  searchPokemons(toId);
-})
-
-async function searchPokemons(numberOfPokemons) {
+const loadPokemonDetails = async (e) => {
+  e.preventDefault();
+  const url = e.target.dataset.url;
   try {
-    const pokemonsJson = await loadJson("GET", `${requestURL}/?limit=${numberOfPokemons}`);
-    const pokemons = pokemonsJson.results;
-    console.log(pokemons);
-
+    const pokemonData = await Pokeapi.getPokemonByURL(url);
+    // console.log(pokemonData);
+    const pokemon = new Pokemon(pokemonData);
+    // console.log(pokemon);
+    UI.showPokemonDetails(pokemon);
   } catch (err) {
-    // make showError()
     console.error(err);
   }
 }
 
-async function loadJson(method, url, body = null) {
-  const response = await fetch(url, {
-    method: method,
-    body: body
-  })
-  if (response.status === 200) {
-    let json = await response.json();
-    return json;
-  } else {
-    throw new Error(response.status);
-  }
-}
+const form = document.getElementById('form');
 
-// async function getPokemonsFromServer(numberOfPokemons = 10){
-//   try {
-//     const pokemonsJson = await loadJson("GET", `${requestURL}/?limit=${numberOfPokemons}`);
-//     const pokemons = pokemonsJson.results;
-//     console.log(pokemons);
-//   } catch(err) {
-//     console.error(err);
-//   }
-// }
-// getPokemonsFromServer();
-
-
-async function getPokemonDetails(numberOfPokemons = 10){
-  const arrOfPromises = [];
-  for (let i = 1; i <= numberOfPokemons; i++) {
-    arrOfPromises.push(loadJson("GET", `${requestURL}/${i}/`))
-  }
-
-  try {
-    const pokemonDetails = await Promise.all(arrOfPromises);
-    const pokemonDetailsFormatted = pokemonDetails.map(pokemon => ({
-      name: pokemon.name,
-      weight: pokemon.weight,
-      height: pokemon.height,
-      id: pokemon.id
-    }));
-
-    localStorage.setItem("pokemons", JSON.stringify(pokemonDetailsFormatted));
-    sortByHeight(pokemonDetailsFormatted);
-    sortByWeight(pokemonDetailsFormatted);
-    
-    return pokemonDetailsFormatted;
-  } catch(err) {
-    console.error(err);
-  }
-}
-getPokemonDetails();
-
-// sortByHeight();
-// sortByWeight();
-
-async function sortByHeight(details = null) {
-  const pokemons = details ? details : await getPokemonDetails();
-  if (pokemons) {
-    pokemons.sort((pokemon1, pokemon2) => pokemon1.height - pokemon2.height);
-    console.log('pokemons sorted by height:');
-    console.log(pokemons)
-    sessionStorage.setItem("pokemonsSortedByHeight", JSON.stringify(pokemons));
-  }
-}
-
-async function sortByWeight(details = null) {
-  const pokemons = details ? details : await getPokemonDetails();
-  if (pokemons) {
-    pokemons.sort((pokemon1, pokemon2) => pokemon1.weight - pokemon2.weight);
-    console.log('pokemons sorted by weight:');
-    console.log(pokemons)
-    sessionStorage.setItem("pokemonsSortedByWeight", JSON.stringify(pokemons));
-  }
-}
+UI.closeModalBtn.addEventListener('click', UI.toggleModal);
+window.addEventListener('click', UI.clickOutsideModalHandler);
+form.addEventListener("submit", loadData);

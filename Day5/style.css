@@ -8,7 +8,8 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-button {
+button,
+a {
   cursor: pointer;
 }
 
@@ -69,16 +70,88 @@ form .error {
 
 .result {
   margin: 2rem;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .pokemon-card {
-  width: 200px;
-  /* height: 150px; */
+  margin: 0.7rem;
+  width: 220px;
   color: #0c2461;
   border: 3px solid #e58e26;
+  box-shadow: 0 3px 5px 0 rgba(0,0,0,0.2)
 }
 
-.pokemon-card .name {
+.pokemon-card .clickable-name {
   text-align: center;
-  padding: 5px 0;
+  padding: 1.5rem 0;
+  height: 100%;
+}
+
+.modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+  background-color: #f4f4f4;
+  margin: 15vh auto;
+  width: 50%;
+  box-shadow: 0 5px 8px 0 rgba(0,0,0,0.2), 0 7px 20px 0 rgba(0,0,0,0.17);
+}
+
+.modal .closeBtn {
+  color: #ccc;
+  font-size: 20px;
+  font-weight: bold;
+  float: right;
+}
+
+.modal .closeBtn:hover,
+.modal .closeBtn:focus {
+  color: #0c2461;
+  cursor: pointer;
+}
+
+.modal-header {
+  background-color: #e58e26;
+  color: #f4f4f4;
+  padding: 20px;
+}
+
+.modal-header h2 {
+  margin: 0;
+}
+
+.modal-body {
+  display: flex;
+  align-items: center;
+}
+
+.modal img {
+  width: 80%;
+  display: block;
+  margin: 0 auto;
+}
+
+.modal .img-container,
+.modal .description {
+  padding: 1rem;
+  flex: 1 0 50%;
+}
+
+.modal-body .row {
+  display: flex;
+  margin: 10px 15px;
+  font-size: 1.25rem;
+}
+
+.modal-body .row .title {
+  font-weight: bold;
+  margin-right: .5rem;
 }
