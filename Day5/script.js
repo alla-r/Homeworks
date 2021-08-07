@@ -2,10 +2,10 @@ import Pokeapi from './components/ApiService.js';
 import UI from './components/UI.js';
 import Pokemon from './components/Pokemon.js';
 import Validator from './components/Validator.js';
+import Error from './components/Error.js';
 
 const loadData = async (e) => {
   e.preventDefault();
-  // add validateInput();
   const searchInput = document.getElementById('search-input');
   if (Validator.validateInput(searchInput.value)) {
     const [fromId, toId] = searchInput.value.split("-");
@@ -16,8 +16,10 @@ const loadData = async (e) => {
       UI.renderAllPokemons(pokemonsFormatted);
       document.querySelectorAll('.name-link').forEach(card => card.addEventListener("click", loadPokemonDetails));
     } catch (err) {
-      console.error(err);
+      Error.showError("Something went wrong");
     }
+  } else {
+    Error.showInputError(document.querySelector('.error'));
   }
 }
 
@@ -26,12 +28,10 @@ const loadPokemonDetails = async (e) => {
   const url = e.target.dataset.url;
   try {
     const pokemonData = await Pokeapi.getPokemonByURL(url);
-    // console.log(pokemonData);
     const pokemon = new Pokemon(pokemonData);
-    // console.log(pokemon);
     UI.showPokemonDetails(pokemon);
   } catch (err) {
-    console.error(err);
+    Error.showError("Something went wrong");
   }
 }
 

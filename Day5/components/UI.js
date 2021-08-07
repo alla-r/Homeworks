@@ -23,8 +23,8 @@ class UI {
       </a>
     </div>
     `));
-  
-    UI.pokemonsContainer.insertAdjacentHTML('beforeend', outputArr.join(''));
+    
+    UI.pokemonsContainer.innerHTML = outputArr.join('');
   }
 
   static showPokemonDetails = (pokemon) => {

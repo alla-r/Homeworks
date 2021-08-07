@@ -155,3 +155,20 @@ form .error {
   font-weight: bold;
   margin-right: .5rem;
 }
+
+.error-pop-up {
+  position: fixed;
+  z-index: 1;
+  top: 1rem;
+  left: 25%;
+  width: 60%;
+  margin: 0 auto;
+  background-color: #eb2f06;
+  color: #f4f4f4;
+  border-radius: 30px;
+}
+
+.error-pop-up  p {
+  padding: 20px;
+  text-align: center;
+}
