@@ -19,6 +19,9 @@ button:focus {
 }
 
 header {
+  position: sticky;
+  top: 0;
+  width: 100%;
   padding: 15px 0;
   display: flex;
   flex-direction: column;
@@ -26,7 +29,6 @@ header {
   align-items: center;
   background-color: #0c2461;
   color: #fff;
-  position: sticky;
 }
 
 form {
@@ -58,14 +60,6 @@ form .error {
   margin-top: 0.55rem;
   font-size: 0.85rem;
   font-weight: 100;
-}
-
-.hide {
-  display: none;
-}
-
-.show {
-  display: block;
 }
 
 .result {
@@ -171,4 +165,36 @@ form .error {
 .error-pop-up  p {
   padding: 20px;
   text-align: center;
+}
+
+.loader-container {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.2);
+  position: fixed;
+  top: 0;
+  z-index: 3;
+  transition: 0.6s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(12, 36, 97, 0.4);
+  border-radius: 50%;
+  border-left-color: #0c2461;
+  animation: loader 1.3s linear infinite;
+}
+
+@keyframes loader {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.hide {
+  display: none;
 }

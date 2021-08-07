@@ -17,11 +17,11 @@ class UI {
 
   static renderAllPokemons = (pokemons) => {
     const outputArr = pokemons.map(pokemon => (`
-    <div class="pokemon-card">
-      <a class="name-link">  
-        <h4 class="clickable-name" data-url=${pokemon.url}>${pokemon.name}</h4>
-      </a>
-    </div>
+      <div class="pokemon-card">
+        <a class="name-link">  
+          <h4 class="clickable-name" data-url=${pokemon.url}>${pokemon.name}</h4>
+        </a>
+      </div>
     `));
     
     UI.pokemonsContainer.innerHTML = outputArr.join('');

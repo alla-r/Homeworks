@@ -7,7 +7,7 @@ class Error {
 
     setTimeout(() => {
       errContainer.classList.toggle("hide");
-    }, 2000);
+    }, 3000);
   }
 
   static showInputError = (errElement, errText) => {
@@ -18,7 +18,7 @@ class Error {
 
     setTimeout(() => {
       errElement.classList.toggle("hide");
-    }, 2000);
+    }, 3000);
   }
 }
 
